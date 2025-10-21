@@ -16,3 +16,6 @@ node_modules/
 # User-generated content that shouldn't be in repo (optional)
 # Uncomment if you don't want to share personal GIFs/images
 # images/
+
+# Local Netlify folder
+.netlify
