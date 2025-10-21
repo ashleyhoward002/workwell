@@ -814,19 +814,36 @@
 
         <!-- Bottom Section: Smart Reminders -->
         <div class="section" style="margin-top: 30px;">
-            <h2><span class="icon">⏰</span> Smart Reminders</h2>
-            <div class="reminder-controls">
-                <div class="time-selector">
-                    <label for="interval">Remind me every:</label>
-                    <select id="interval">
-                        <option value="15">15 minutes</option>
-                        <option value="30" selected>30 minutes</option>
-                        <option value="45">45 minutes</option>
-                        <option value="60">1 hour</option>
-                        <option value="90">1.5 hours</option>
-                        <option value="120">2 hours</option>
+            <h2><span class="icon">⏰</span> Work-Friendly Reminders</h2>
+            <p style="color: #666; margin-bottom: 20px; font-size: 0.95em;">
+                <strong>💼 Realistic for the workplace:</strong> Get gentle reminders without disrupting your flow
+            </p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div style="background: #f0f9ff; padding: 20px; border-radius: 10px; border: 2px solid #3b82f6;">
+                    <h3 style="margin-bottom: 10px; color: #1e40af;">🧘 Quick Stretches</h3>
+                    <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">30-second desk stretches</p>
+                    <select id="stretchInterval" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                        <option value="0">Manual only (do when needed)</option>
+                        <option value="60">Once per hour</option>
+                        <option value="120" selected>Twice per shift (every 2 hours)</option>
+                        <option value="240">Once per shift (mid-shift)</option>
                     </select>
                 </div>
+                
+                <div style="background: #f0fdf4; padding: 20px; border-radius: 10px; border: 2px solid #22c55e;">
+                    <h3 style="margin-bottom: 10px; color: #15803d;">💪 Full Exercises</h3>
+                    <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">5-minute exercise routines</p>
+                    <select id="interval" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                        <option value="0">Manual only (do when convenient)</option>
+                        <option value="240" selected>Once per shift (mid-shift)</option>
+                        <option value="180">Twice per shift (every 3 hours)</option>
+                        <option value="120">3 times per shift (every 2 hours)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="reminder-controls">
                 <div class="time-selector">
                     <label for="workHours">Work hours:</label>
                     <input type="time" id="startTime" value="09:00">
@@ -835,6 +852,7 @@
                 </div>
                 <button onclick="startReminders()">Start Reminders</button>
                 <button onclick="stopReminders()">Stop Reminders</button>
+                <p style="margin-top: 15px; color: #666; font-size: 0.85em;">💡 <strong>Pro tip:</strong> You can always click any exercise to do it manually whenever you have a free moment!</p>
             </div>
 
             <div class="calendar-export">
