@@ -13,12 +13,54 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f7fa;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '💪 🏃 🧘 🚴 ⚡ 🎯 💚 🏋️ 🤸 🧠 ❤️ 💪 🏃 🧘 🚴 ⚡ 🎯 💚 🏋️ 🤸 🧠 ❤️ 💪 🏃 🧘 🚴 ⚡ 🎯 💚 🏋️ 🤸 🧠 ❤️';
+            position: fixed;
+            top: -50px;
+            left: 0;
+            width: 200%;
+            font-size: 3em;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+            animation: float 60s linear infinite;
+            letter-spacing: 80px;
+            line-height: 2;
+        }
+
+        body::after {
+            content: '🏃 💪 🧘 ⚡ 🚴 💚 🏋️ 🎯 🤸 ❤️ 🧠 🏃 💪 🧘 ⚡ 🚴 💚 🏋️ 🎯 🤸 ❤️ 🧠 🏃 💪 🧘 ⚡ 🚴 💚 🏋️ 🎯 🤸 ❤️ 🧠';
+            position: fixed;
+            bottom: -50px;
+            right: 0;
+            width: 200%;
+            font-size: 3em;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+            animation: float-reverse 60s linear infinite;
+            letter-spacing: 80px;
+            line-height: 2;
+        }
+
+        @keyframes float {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        @keyframes float-reverse {
+            from { transform: translateX(0); }
+            to { transform: translateX(50%); }
         }
 
         .app-container {
