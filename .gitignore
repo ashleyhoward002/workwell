@@ -1,0 +1,18 @@
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.log
+
+# Node modules (if you add any later)
+node_modules/
+
+# User-generated content that shouldn't be in repo (optional)
+# Uncomment if you don't want to share personal GIFs/images
+# images/

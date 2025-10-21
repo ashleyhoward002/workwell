@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeskFit - Office Wellness App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .main-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .section h2 {
+            color: #444;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reminder-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .time-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            color: #555;
+            font-weight: 500;
+        }
+
+        select, input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .exercise-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .exercise-card h3 {
+            color: #444;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .exercise-card p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .exercise-card .duration {
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 5px;
+            font-size: 0.85em;
+        }
+
+        .timer-display {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .timer-display h3 {
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .countdown {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+        }
+
+        .current-exercise {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .weekly-plan {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .weekly-plan h2 {
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .day-schedule {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .day-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .day-card:hover {
+            transform: scale(1.05);
+        }
+
+        .day-card h4 {
+            margin-bottom: 10px;
+        }
+
+        .day-card p {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: slideIn 0.5s ease;
+            max-width: 300px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .calendar-export {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 1.5em;
+            vertical-align: middle;
+        }
+
+        .focus-selector {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .focus-options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .focus-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .focus-option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .focus-option input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .focus-option span {
+            color: #444;
+            font-weight: 500;
+        }
+
+        .exercise-tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.75em;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1><span class="icon">💪</span> DeskFit</h1>
+            <p>Your office wellness companion for a healthier workday</p>
+        </div>
+
+        <div class="timer-display" id="timerDisplay" style="display: none;">
+            <h3>Next break in:</h3>
+            <div class="countdown" id="countdown">30:00</div>
+        </div>
+
+        <div class="current-exercise" id="currentExercise" style="display: none;">
+            <h3>Time for a break!</h3>
+            <p id="exerciseName"></p>
+        </div>
+
+        <div class="main-sections">
+            <div class="section">
+                <h2><span class="icon">⏰</span> Smart Reminders</h2>
+                <div class="reminder-controls">
+                    <div class="time-selector">
+                        <label for="interval">Remind me every:</label>
+                        <select id="interval">
+                            <option value="15">15 minutes</option>
+                            <option value="30" selected>30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                        </select>
+                    </div>
+                    <div class="time-selector">
+                        <label for="workHours">Work hours:</label>
+                        <input type="time" id="startTime" value="09:00">
+                        <span>to</span>
+                        <input type="time" id="endTime" value="17:00">
+                    </div>
+                    <button onclick="startReminders()">Start Reminders</button>
+                    <button onclick="stopReminders()">Stop Reminders</button>
+                </div>
+
+                <div class="calendar-export">
+                    <p><strong>📅 Calendar Integration</strong></p>
+                    <p style="margin: 10px 0; color: #666; font-size: 0.9em;">Export your break schedule to your calendar app</p>
+                    <button onclick="exportToCalendar()">Export to Calendar</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><span class="icon">🎯</span> Focus Areas</h2>
+                <div class="focus-selector">
+                    <p style="color: #666; margin-bottom: 15px;">Select your problem areas for targeted exercises:</p>
+                    <div class="focus-options">
+                        <label class="focus-option">
+                            <input type="checkbox" id="techNeck" checked>
+                            <span>Tech Neck & Forward Head</span>
+                        </label>
+                        <label class="focus-option">
+                            <input type="checkbox" id="wristPain">
+                            <span>Wrist & Carpal Tunnel</span>
+                        </label>
+                        <label class="focus-option">
+                            <input type="checkbox" id="eyeStrain" checked>
+                            <span>Eye Strain & Headaches</span>
+                        </label>
+                        <label class="focus-option">
+                            <input type="checkbox" id="lowerBack">
+                            <span>Lower Back Pain</span>
+                        </label>
+                        <label class="focus-option">
+                            <input type="checkbox" id="shoulders">
+                            <span>Rounded Shoulders</span>
+                        </label>
+                        <label class="focus-option">
+                            <input type="checkbox" id="circulation">
+                            <span>Poor Leg Circulation</span>
+                        </label>
+                    </div>
+                    <button onclick="updateExerciseList()" style="margin-top: 15px; width: 100%;">Update Exercise Plan</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><span class="icon">🏃</span> Your Personalized Exercises</h2>
+                <div class="exercise-list" id="exerciseList">
+                    <!-- Exercises will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="weekly-plan">
+            <h2><span class="icon">📋</span> Weekly Wellness Plan</h2>
+            <div class="day-schedule">
+                <div class="day-card">
+                    <h4>Monday</h4>
+                    <p>Focus: Neck & Shoulders</p>
+                    <p style="font-size: 0.8em; margin-top: 5px;">5 exercises</p>
+                </div>
+                <div class="day-card">
+                    <h4>Tuesday</h4>
+                    <p>Focus: Wrists & Arms</p>
+                    <p style="font-size: 0.8em; margin-top: 5px;">4 exercises</p>
+                </div>
+                <div class="day-card">
+                    <h4>Wednesday</h4>
+                    <p>Focus: Core & Back</p>
+                    <p style="font-size: 0.8em; margin-top: 5px;">5 exercises</p>
+                </div>
+                <div class="day-card">
+                    <h4>Thursday</h4>
+                    <p>Focus: Legs & Circulation</p>
+                    <p style="font-size: 0.8em; margin-top: 5px;">4 exercises</p>
+                </div>
+                <div class="day-card">
+                    <h4>Friday</h4>
+                    <p>Focus: Full Body Stretch</p>
+                    <p style="font-size: 0.8em; margin-top: 5px;">6 exercises</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <h3>⏰ Break Time!</h3>
+        <p id="notificationText">Time to stretch and move around!</p>
+    </div>
+
+    <script>
+        let reminderInterval = null;
+        let countdownInterval = null;
+        let timeRemaining = 0;
+        let currentExercises = [];
+
+        // Exercise database with categories
+        const exercises = {
+            techNeck: [
+                {
+                    name: 'Chin Tucks',
+                    description: 'Pull chin straight back (not down), creating a "double chin". Hold 5 seconds. Crucial for reversing tech neck.',
+                    duration: '10 reps, 5 sec hold',
+                    category: 'Tech Neck'
+                },
+                {
+                    name: 'Upper Trap Stretch',
+                    description: 'Tilt head to one side, bringing ear toward shoulder. Place hand on head for gentle pressure.',
+                    duration: '30 seconds each side',
+                    category: 'Tech Neck'
+                },
+                {
+                    name: 'Levator Scapulae Stretch',
+                    description: 'Look down and to the side (45°), gently pull head with hand. Targets neck-shoulder junction.',
+                    duration: '30 seconds each side',
+                    category: 'Tech Neck'
+                },
+                {
+                    name: 'Cervical Extension',
+                    description: 'Slowly look up at ceiling, hold, return to neutral. Counteracts forward head position.',
+                    duration: '5 reps, 3 sec hold',
+                    category: 'Tech Neck'
+                }
+            ],
+            wristPain: [
+                {
+                    name: 'Wrist Flexor Stretch',
+                    description: 'Extend arm, pull fingers back with other hand. Essential for preventing carpal tunnel.',
+                    duration: '30 seconds each',
+                    category: 'Wrist Care'
+                },
+                {
+                    name: 'Wrist Extensor Stretch',
+                    description: 'Extend arm, push fingers down and back. Balances flexor stretch.',
+                    duration: '30 seconds each',
+                    category: 'Wrist Care'
+                },
+                {
+                    name: 'Tendon Glides',
+                    description: 'Make a fist, then straighten fingers, then bend at knuckles. Keeps tendons mobile.',
+                    duration: '10 full sequences',
+                    category: 'Wrist Care'
+                },
+                {
+                    name: 'Prayer Stretch',
+                    description: 'Press palms together in prayer position, lower hands while keeping palms together.',
+                    duration: '30 seconds',
+                    category: 'Wrist Care'
+                }
+            ],
+            eyeStrain: [
+                {
+                    name: '20-20-20 Rule',
+                    description: 'Look at something 20 feet away for 20 seconds. Reduces eye fatigue from screen focus.',
+                    duration: '20 seconds',
+                    category: 'Eye Care'
+                },
+                {
+                    name: 'Palming',
+                    description: 'Cup palms over closed eyes without pressure. Creates darkness to rest eyes.',
+                    duration: '30 seconds',
+                    category: 'Eye Care'
+                },
+                {
+                    name: 'Figure 8 Eye Movement',
+                    description: 'Trace a figure 8 with your eyes. Improves eye muscle flexibility.',
+                    duration: '5 figures each direction',
+                    category: 'Eye Care'
+                },
+                {
+                    name: 'Blink Exercises',
+                    description: 'Deliberately blink slowly and fully 10 times. Rehydrates eyes.',
+                    duration: '10 slow blinks',
+                    category: 'Eye Care'
+                }
+            ],
+            lowerBack: [
+                {
+                    name: 'Seated Pelvic Tilts',
+                    description: 'Rock pelvis forward and back. Mobilizes lower spine and engages core.',
+                    duration: '15 reps',
+                    category: 'Lower Back'
+                },
+                {
+                    name: 'Seated Figure 4 Stretch',
+                    description: 'Ankle on opposite knee, lean forward. Stretches hip and reduces back tension.',
+                    duration: '30 seconds each side',
+                    category: 'Lower Back'
+                },
+                {
+                    name: 'Standing Back Extension',
+                    description: 'Stand, place hands on lower back, gently arch backward. Reverses sitting posture.',
+                    duration: '10 reps',
+                    category: 'Lower Back'
+                },
+                {
+                    name: 'Seated Knee to Chest',
+                    description: 'Pull one knee toward chest while seated. Stretches lower back and glutes.',
+                    duration: '30 seconds each side',
+                    category: 'Lower Back'
+                }
+            ],
+            shoulders: [
+                {
+                    name: 'Doorway Chest Stretch',
+                    description: 'Place arm on door frame, step forward. Opens chest, reverses rounded shoulders.',
+                    duration: '30 seconds each side',
+                    category: 'Shoulders'
+                },
+                {
+                    name: 'Wall Angels',
+                    description: 'Back against wall, arms in "goal post" position, slide up and down.',
+                    duration: '15 reps',
+                    category: 'Shoulders'
+                },
+                {
+                    name: 'Shoulder Blade Squeezes',
+                    description: 'Squeeze shoulder blades together, hold. Strengthens rhomboids, improves posture.',
+                    duration: '15 reps, 3 sec hold',
+                    category: 'Shoulders'
+                },
+                {
+                    name: 'Cross-Body Shoulder Stretch',
+                    description: 'Pull arm across body with opposite hand. Stretches posterior deltoid.',
+                    duration: '30 seconds each side',
+                    category: 'Shoulders'
+                }
+            ],
+            circulation: [
+                {
+                    name: 'Calf Raises',
+                    description: 'Rise up on toes, lower slowly. Can do seated or standing. Pumps blood from legs.',
+                    duration: '20 reps',
+                    category: 'Circulation'
+                },
+                {
+                    name: 'Seated Marching',
+                    description: 'Lift knees alternately while seated. Gets blood moving without leaving chair.',
+                    duration: '30 seconds',
+                    category: 'Circulation'
+                },
+                {
+                    name: 'Ankle Circles',
+                    description: 'Rotate ankles in circles. Prevents blood pooling in lower legs.',
+                    duration: '10 each direction',
+                    category: 'Circulation'
+                },
+                {
+                    name: 'Leg Extensions',
+                    description: 'Extend one leg straight out, flex foot, hold. Engages quadriceps, improves flow.',
+                    duration: '10 reps each leg',
+                    category: 'Circulation'
+                }
+            ]
+        };
+
+        // Initialize with default exercises on load
+        window.addEventListener('load', () => {
+            updateExerciseList();
+        });
+
+        function updateExerciseList() {
+            const exerciseList = document.getElementById('exerciseList');
+            currentExercises = [];
+            
+            // Get selected focus areas
+            const selectedAreas = {
+                techNeck: document.getElementById('techNeck').checked,
+                wristPain: document.getElementById('wristPain').checked,
+                eyeStrain: document.getElementById('eyeStrain').checked,
+                lowerBack: document.getElementById('lowerBack').checked,
+                shoulders: document.getElementById('shoulders').checked,
+                circulation: document.getElementById('circulation').checked
+            };
+            
+            // Build exercise list based on selections
+            for (const [area, isSelected] of Object.entries(selectedAreas)) {
+                if (isSelected && exercises[area]) {
+                    currentExercises = currentExercises.concat(exercises[area]);
+                }
+            }
+            
+            // If no selections, show a message
+            if (currentExercises.length === 0) {
+                exerciseList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Select at least one focus area to see exercises</p>';
+                return;
+            }
+            
+            // Populate exercise list
+            exerciseList.innerHTML = currentExercises.map(exercise => `
+                <div class="exercise-card" onclick="startExercise('${exercise.name}', '${exercise.duration}')">
+                    <h3>${exercise.name} <span class="exercise-tag">${exercise.category}</span></h3>
+                    <p>${exercise.description}</p>
+                    <div class="duration">Duration: ${exercise.duration}</div>
+                </div>
+            `).join('');
+            
+            showNotification(`Exercise plan updated: ${currentExercises.length} exercises selected`);
+        }
+
+        function startReminders() {
+            stopReminders(); // Clear any existing timers
+            
+            const intervalMinutes = parseInt(document.getElementById('interval').value);
+            const intervalMs = intervalMinutes * 60 * 1000;
+            
+            // Start countdown
+            timeRemaining = intervalMinutes * 60;
+            document.getElementById('timerDisplay').style.display = 'block';
+            updateCountdown();
+            
+            // Set up the reminder interval
+            reminderInterval = setInterval(() => {
+                showNotification();
+                suggestRandomExercise();
+                timeRemaining = intervalMinutes * 60;
+            }, intervalMs);
+            
+            // Set up countdown update
+            countdownInterval = setInterval(() => {
+                timeRemaining--;
+                updateCountdown();
+                if (timeRemaining <= 0) {
+                    timeRemaining = intervalMinutes * 60;
+                }
+            }, 1000);
+            
+            // Show initial notification
+            showNotification('Reminders started! Take a break every ' + intervalMinutes + ' minutes.');
+        }
+
+        function stopReminders() {
+            if (reminderInterval) {
+                clearInterval(reminderInterval);
+                reminderInterval = null;
+            }
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            document.getElementById('timerDisplay').style.display = 'none';
+            document.getElementById('currentExercise').style.display = 'none';
+            showNotification('Reminders stopped');
+        }
+
+        function updateCountdown() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('countdown').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function showNotification(customMessage = null) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            if (customMessage) {
+                notificationText.textContent = customMessage;
+            } else {
+                const messages = [
+                    'Time to stretch and move around!',
+                    'Your body will thank you for this break!',
+                    'Stand up and give your eyes a rest!',
+                    'Quick movement break - you\'ve earned it!',
+                    'Stretch break! Your posture needs attention.',
+                    'Tech neck check - time for chin tucks!',
+                    'Eye break - remember the 20-20-20 rule!'
+                ];
+                notificationText.textContent = messages[Math.floor(Math.random() * messages.length)];
+            }
+            
+            notification.classList.add('show');
+            
+            // Play a gentle sound if available
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('DeskFit Reminder', {
+                    body: notificationText.textContent,
+                    icon: '💪'
+                });
+            }
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        function suggestRandomExercise() {
+            if (currentExercises.length === 0) {
+                updateExerciseList(); // Initialize with defaults if empty
+            }
+            
+            if (currentExercises.length > 0) {
+                const randomExercise = currentExercises[Math.floor(Math.random() * currentExercises.length)];
+                const exerciseDiv = document.getElementById('currentExercise');
+                const exerciseName = document.getElementById('exerciseName');
+                
+                exerciseName.textContent = `${randomExercise.name} - ${randomExercise.duration}`;
+                exerciseDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    exerciseDiv.style.display = 'none';
+                }, 10000);
+            }
+        }
+
+        function startExercise(name, duration) {
+            const exerciseDiv = document.getElementById('currentExercise');
+            const exerciseName = document.getElementById('exerciseName');
+            
+            exerciseName.textContent = `${name} - ${duration}`;
+            exerciseDiv.style.display = 'block';
+            
+            showNotification(`Starting: ${name}`);
+            
+            setTimeout(() => {
+                exerciseDiv.style.display = 'none';
+            }, 10000);
+        }
+
+        function exportToCalendar() {
+            const interval = document.getElementById('interval').value;
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            
+            // Create calendar data
+            const calendarData = generateICSFile(interval, startTime, endTime);
+            
+            // Download ICS file
+            const blob = new Blob([calendarData], { type: 'text/calendar' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'deskfit-schedule.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showNotification('Calendar file downloaded! Import it to your calendar app.');
+        }
+
+        function generateICSFile(intervalMinutes, startTime, endTime) {
+            const today = new Date();
+            const [startHour, startMin] = startTime.split(':');
+            const [endHour, endMin] = endTime.split(':');
+            
+            let icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//DeskFit//Office Wellness//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:DeskFit Breaks
+X-WR-TIMEZONE:UTC
+`;
+
+            // Generate recurring events for the next week
+            for (let day = 0; day < 5; day++) { // Monday to Friday
+                const date = new Date(today);
+                date.setDate(date.getDate() + day);
+                
+                let currentTime = new Date(date);
+                currentTime.setHours(parseInt(startHour), parseInt(startMin), 0);
+                
+                const dayEnd = new Date(date);
+                dayEnd.setHours(parseInt(endHour), parseInt(endMin), 0);
+                
+                while (currentTime < dayEnd) {
+                    const eventStart = new Date(currentTime);
+                    const eventEnd = new Date(currentTime);
+                    eventEnd.setMinutes(eventEnd.getMinutes() + 5); // 5-minute break
+                    
+                    // Select relevant exercise based on time of day
+                    let exerciseNote = '';
+                    const hour = currentTime.getHours();
+                    if (hour < 11) {
+                        exerciseNote = 'Morning: Focus on neck and shoulder stretches';
+                    } else if (hour < 14) {
+                        exerciseNote = 'Midday: Eye exercises and wrist stretches';
+                    } else {
+                        exerciseNote = 'Afternoon: Lower back and circulation exercises';
+                    }
+                    
+                    icsContent += `BEGIN:VEVENT
+UID:${Date.now()}-${day}-${currentTime.getHours()}${currentTime.getMinutes()}@deskfit
+DTSTART:${formatDateForICS(eventStart)}
+DTEND:${formatDateForICS(eventEnd)}
+SUMMARY:DeskFit Break - ${exerciseNote.split(':')[0]}
+DESCRIPTION:${exerciseNote}\\n\\nCheck your personalized exercise list in the DeskFit app.
+BEGIN:VALARM
+TRIGGER:-PT5M
+ACTION:DISPLAY
+DESCRIPTION:DeskFit break in 5 minutes!
+END:VALARM
+END:VEVENT
+`;
+                    
+                    currentTime.setMinutes(currentTime.getMinutes() + parseInt(intervalMinutes));
+                }
+            }
+            
+            icsContent += 'END:VCALENDAR';
+            return icsContent;
+        }
+
+        function formatDateForICS(date) {
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${year}${month}${day}T${hours}${minutes}00`;
+        }
+
+        // Request notification permission on load
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                startReminders();
+            }
+            if (e.ctrlKey && e.key === 'x') {
+                e.preventDefault();
+                stopReminders();
+            }
+        });
+    </script> // 5-minute break
+                    
+                    icsContent += `BEGIN:VEVENT
+UID:${Date.now()}-${day}-${currentTime.getHours()}${currentTime.getMinutes()}@deskfit
+DTSTART:${formatDateForICS(eventStart)}
+DTEND:${formatDateForICS(eventEnd)}
+SUMMARY:DeskFit Break - Stretch & Move
+DESCRIPTION:Time for a quick stretch break! Stand up, move around, and do some desk exercises.
+BEGIN:VALARM
+TRIGGER:-PT5M
+ACTION:DISPLAY
+DESCRIPTION:DeskFit break in 5 minutes!
+END:VALARM
+END:VEVENT
+`;
+                    
+                    currentTime.setMinutes(currentTime.getMinutes() + parseInt(intervalMinutes));
+                }
+            }
+            
+            icsContent += 'END:VCALENDAR';
+            return icsContent;
+        }
+
+        function formatDateForICS(date) {
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${year}${month}${day}T${hours}${minutes}00`;
+        }
+
+        // Request notification permission on load
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                startReminders();
+            }
+            if (e.ctrlKey && e.key === 'x') {
+                e.preventDefault();
+                stopReminders();
+            }
+        });
+    </script>
+</body>
+</html>
